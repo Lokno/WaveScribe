@@ -4,8 +4,7 @@ WaveScribe is command-line utility which encodes a 32-bit string into a 512x512 
 
 For the wavelet-based data encoding scheme uses the method described in the follow paper:
 
-A New Robust Blind Watermarking Method Based on Neural Networks in Wavelet Transform Domain
-http://www.idosi.org/wasj/wasj22(11)13/8.pdf
+[A New Robust Blind Watermarking Method Based on Neural Networks in Wavelet Transform Domain] [1]
 
 ## Usage ##
 
@@ -31,8 +30,8 @@ It is required for encoding and decoding the image.
 
 ## Dependencies ##
 
-- dwt97.c (included) Mirror https://code.google.com/p/axonlib/source/browse/trunk/extern/dwt97.c?spec=svn19&r=19
-- miniz.c : Drop-in replacement for zlib (used by CCPNGReader.c) https://code.google.com/p/miniz/
+- dwt97.c (included) Can be found in [Axonlib] [2] source
+- miniz.c : Drop-in replacement for zlib (used by CCPNGReader.c) [Google Code Repo] [3]
 - Schifra Version 0.0.1 : Reed-Solomon error correcting code library
 
 ## Extras ##
@@ -50,3 +49,7 @@ It is required for encoding and decoding the image.
 - convertImage.go : Go-lang script that converts from PNG to JPEG
 
 > usage: convertImage.go <input>[.png|.jpg] <output>[.png|.jpg] [quality]
+
+  [1] : http://www.idosi.org/wasj/wasj22(11)13/8.pdf
+  [2] : https://code.google.com/p/axonlib/source/browse/trunk/extern/dwt97.c?spec=svn19&r=19 "dwt97.c"
+  [3] : https://code.google.com/p/miniz/ "miniz"
