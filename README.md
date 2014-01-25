@@ -50,6 +50,6 @@ It is required for encoding and decoding the image.
 
 > usage: convertImage.go <input>[.png|.jpg] <output>[.png|.jpg] [quality]
 
-  [1] : http://www.idosi.org/wasj/wasj22(11)13/8.pdf
-  [2] : https://code.google.com/p/axonlib/source/browse/trunk/extern/dwt97.c?spec=svn19&r=19 "dwt97.c"
-  [3] : https://code.google.com/p/miniz/ "miniz"
+  [1]: http://www.idosi.org/wasj/wasj22(11)13/8.pdf
+  [2]: https://code.google.com/p/axonlib/source/browse/trunk/extern/dwt97.c?spec=svn19&r=19 "dwt97.c"
+  [3]: https://code.google.com/p/miniz/ "miniz"
