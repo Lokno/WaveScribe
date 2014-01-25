@@ -11,10 +11,10 @@ http://www.idosi.org/wasj/wasj22(11)13/8.pdf
 
 > WaveScribe strength input.png [output.png "message"]
 
-The message is encoded into input.png and the result is saved to output.png
-If no output image is provided, the application attempts to decode a message from input.png
+The message is encoded into input.png and the result is saved to output.png.
+If no output image is provided, the application attempts to decode a message from input.png.
 The strength value indicates how strongly the data will be encoded into the image. 
-It is required for encoding and decoding the image
+It is required for encoding and decoding the image.
 
 ## Process ##
 
@@ -27,7 +27,7 @@ It is required for encoding and decoding the image
 ## Issues ##
 
 - Can only handle image of size 512x512. 
-- Although 
+- Encoding does not seem to survive JPEG compression.
 
 ## Dependencies ##
 
