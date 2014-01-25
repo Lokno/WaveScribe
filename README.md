@@ -39,8 +39,8 @@ It is required for encoding and decoding the image.
 
 - CCPNGReader.h   : A simple PNG reader using miniz.c
 - hidden.go       : Go-lang script that hides a second image in the lower bits of another
-  usage: hidden.go bits(0-7) input.png [imageToHide.png] output.png
+> usage: hidden.go bits(0-7) input.png [imageToHide.png] output.png
 - hidden.cpp      : C++ source that hides a second image in the lower bits of another
-  usage: hidden.exe bits(0-7) input.png [imageToHide.png] output.png
+> usage: hidden.exe bits(0-7) input.png [imageToHide.png] output.png
 - convertImage.go : Go-lang script that converts from PNG to JPEG
-  usage: convertImage.go <input>[.png|.jpg] <output>[.png|.jpg] [quality]
+> usage: convertImage.go <input>[.png|.jpg] <output>[.png|.jpg] [quality]
