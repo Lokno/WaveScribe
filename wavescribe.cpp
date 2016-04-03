@@ -18,16 +18,32 @@
 #include "schifra_error_processes.hpp"
 
 #ifdef _DEBUG
-#include <vld.h>
+//#include <vld.h>
 #endif
 
 #define USE_LAB
 
 extern "C"
 {
-	#include "CCPNGReader.h"
+	#define STBI_ONLY_PNG
+	#define STB_IMAGE_IMPLEMENTATION
+	#include "stb_image.h"
+	#define STB_IMAGE_WRITE_IMPLEMENTATION
+	#include "stb_image_write.h"
 	#include "dwt.h"
 }
+
+typedef union
+{
+    struct
+    {
+        unsigned int r : 8;  // Red:     0/255 to 255/255
+        unsigned int g : 8;  // Green:   0/255 to 255/255
+        unsigned int b : 8;  // Blue:    0/255 to 255/255
+        unsigned int a : 8;  // Alpha:   0/255 to 255/255
+    };
+    unsigned int c;
+}rgbacol;
 
 #ifdef _WIN32
 static inline double round(double val)
@@ -166,7 +182,7 @@ void writeFreqImage( unsigned int* src, unsigned int* dst, double *freqs, unsign
 	unsigned int *p1;
 	double       *p2;
 
-	ccpng_color temp;
+	rgbacol temp;
 
 	double minFreq = DBL_MAX;
 	double maxFreq = -DBL_MAX;
@@ -204,7 +220,7 @@ void convertBinaryImage( unsigned int* src, unsigned char* dst, unsigned int wid
 	double tempColor1[3];
 	double tempColor2[3];
 
-	ccpng_color temp;
+	rgbacol temp;
 
     for( i = 0, p1 = src, p2 = dst; i < height; ++i )
     {
@@ -235,7 +251,7 @@ void convertBinaryImageInverse( unsigned char* src, unsigned int* dst, unsigned 
 	unsigned char *p1;
 	unsigned int *p2;
 
-	ccpng_color temp;
+	rgbacol temp;
 
     for( i = 0, p1 = src, p2 = dst; i < height; ++i )
     {
@@ -725,8 +741,8 @@ void decodeMark( double* freqs, unsigned char* mark, double* buffer1, double* bu
 	// fuzzy mean
 	for( i = 0, p1 = buffer1, p2 = buffer2, p3 = mark; i < markLength; ++i, ++p1, ++p2, ++p3 )
 	{
-		double belief1 = 1 - 2 * abs(*p1 - round(*p1));
-		double belief2 = 1 - 2 * abs(*p2 - round(*p2));
+		double belief1 = 1 - 2 * fabs(*p1 - round(*p1));
+		double belief2 = 1 - 2 * fabs(*p2 - round(*p2));
 
 		double vote1 = ((int)round(*p1)) % 2 == 0 ? -1 : 1;
 		double vote2 = ((int)round(*p2)) % 2 == 0 ? -1 : 1;
@@ -795,26 +811,26 @@ void reconstructImage( double* data, double* columnBuffer, unsigned int levels, 
 
 // if mark is NULL, attempts to remove watermark from LH3 and HL3 and store the recontruction in dst
 // otherwise it inserts the mark into the image stores the new image in dst
-void insertWatermark( unsigned int* src, unsigned int** dst, unsigned char* mark, unsigned int *width, unsigned int *height, bool isForward = true, double markStrength = 0.5 )
+void insertWatermark( unsigned int* src, unsigned int** dst, unsigned char* mark, int *width, int *height, bool isForward = true, double markStrength = 0.5 )
 {
 	unsigned int size = *width**height;
 	unsigned int newSize;
 	unsigned int n;
-    unsigned int i,j;
+    int i,j;
 	unsigned int *p1;
 	double       *p2;
 
 	double tempColor1[3];
 	double tempColor2[3];
 
-	unsigned int newWidth = nextPow2(*width);
-	unsigned int newHeight = nextPow2(*height);
+	int newWidth = nextPow2(*width);
+	int newHeight = nextPow2(*height);
 
 	newSize = newWidth*newHeight;
 
 	n = newSize;
 
-	ccpng_color temp;
+	rgbacol temp;
 
 	unsigned int markSize = 32;
 
@@ -956,17 +972,18 @@ int main(int argc, char** argv)
 		exit(-1);
 	}
 
-	unsigned int width, height;
+	int width, height, channels;
 	unsigned int markWidth, markHeight;
 
 	markWidth = markHeight = 32;
 
-	CCPNGInit();
+	//CCPNGInit();
 
-	unsigned int* imageData = CCPNGReadFile(argv[2], &width, &height);
+	//unsigned int* imageData = CCPNGReadFile(argv[2], &width, &height);
+	unsigned int* imageData = (unsigned int*)stbi_load( argv[2], &width, &height, &channels, 4 );
 	unsigned int* outputData = NULL;
 	double strength = atof(argv[1]);
-	unsigned char* boolMark = (unsigned char*)malloc(sizeof(unsigned char)*markWidth*markHeight);		
+	unsigned char* boolMark = (unsigned char*)malloc(sizeof(unsigned char)*markWidth*markHeight);	
 
 	// encode string from command line
 	if( argc == 5 ) 
@@ -1012,7 +1029,8 @@ int main(int argc, char** argv)
 
 			if( outputData != NULL )
 			{
-				CCPNGWriteFile(argv[3], outputData, width, height, 0, 1);
+				stbi_write_png( argv[3], width, height, 4, outputData, 4*width);
+				//CCPNGWriteFile(argv[3], outputData, width, height, 0, 1);
 
 				if( argc != 5 ) 
 					free(outputData);
@@ -1028,7 +1046,7 @@ int main(int argc, char** argv)
 
 	free(boolMark);
 
-	CCPNGDestroy();
+	//CCPNGDestroy();
 	dwtcleanup();
 
 	return 0;

@@ -9,7 +9,11 @@
 
 extern "C"
 {
-	#include "CCPNGReader.h"
+	#define STBI_ONLY_PNG
+	#define STB_IMAGE_IMPLEMENTATION
+	#include "stb_image.h"
+	#define STB_IMAGE_WRITE_IMPLEMENTATION
+	#include "stb_image_write.h"
 }
 
 typedef union charbits
@@ -128,10 +132,12 @@ void addHidden(unsigned int* pImage, unsigned int* pHidden, unsigned int width, 
 
 int main( int argc, char** argv )
 {
-	unsigned int width1;
-	unsigned int height1;
-	unsigned int width2;
-	unsigned int height2;
+	int width1;
+	int height1;
+	int width2;
+	int height2;
+	int channels1;
+	int channels2;
 	unsigned int* pData1;
 	unsigned int* pData2;
 
@@ -139,19 +145,24 @@ int main( int argc, char** argv )
 	if( argc > 3 )
 	{
 		int bits = atoi(argv[1]);
-		pData1 = CCPNGReadFile(argv[2], &width1, &height1);
+
+        pData1 = (unsigned int*)stbi_load( argv[2], &width1, &height1, &channels1, 4 );
+		//pData1 = CCPNGReadFile(argv[2], &width1, &height1);
 
 		if( pData1 != NULL )
 		{
 			if( argc > 4 )
 			{
-				pData2 = CCPNGReadFile(argv[3], &width2, &height2);
+				pData2 = (unsigned int*)stbi_load( argv[3], &width2, &height2, &channels2, 4 );
+				//pData2 = CCPNGReadFile(argv[3], &width2, &height2);
 
 				if( pData2 != NULL && width1 == width2 && height1 == height2 )
 				{
 					printf("Placing %s into the lower bits of %s and saving the result to %s\n", argv[2], argv[3], argv[4]);
 					addHiddenAny(pData1,pData2,width1,height1,bits);
-					CCPNGWriteFile(argv[4], pData1, width1, height1, 0, 1);
+
+					stbi_write_png( argv[4], width1, height1, channels1, pData1, 4*width);
+					//CCPNGWriteFile(argv[4], pData1, width1, height1, 0, 1);
 					free(pData2);
 				}
 				else
@@ -163,7 +174,9 @@ int main( int argc, char** argv )
 			{
 				printf("Normalizing the lower bits of %s and saving the result to %s\n", argv[2], argv[3]);
 				removeHiddenAny(pData1,width1,height1,bits);
-				CCPNGWriteFile(argv[3], pData1, width1, height1, 0, 1);
+
+				stbi_write_png( argv[3], width1, height1, channels, pData1, 4*width);
+				//CCPNGWriteFile(argv[3], pData1, width1, height1, 0, 1);
 			}
 			
 			free(pData1);
@@ -178,7 +191,7 @@ int main( int argc, char** argv )
 		printf("   usage: bits source.png [hidden.png] output.png\n");
 	}
 
-	CCPNGDestroy();
+	//CCPNGDestroy();
 
 	return 0;
 }
