@@ -1,18 +1,15 @@
 solution "WaveScribe"
    configurations { "Debug", "Release" }
 
-   --SchifraDir = "/Users/lokno/Documents/Libraries/schifra-master/"
-   --STBDir  = "/Users/lokno/Documents/Libraries/stb-master/"
-
-   SchifraDir = "E:/libraries/schifra/"
-   STBDir     = "C:/Users/Lokno/Documents/Projects/stb/"
+   SchifraDir = "%SCHIFRADIR%"
+   STBDir     = "%STBDIR%"
 
    project "WaveScribe"
       kind "ConsoleApp"
       language "C++"
 
-      files { STBDir  .. "stb_image.h",
-              STBDir  .. "stb_image_write.h",
+      files { STBDir .. "/stb_image.h",
+              STBDir .. "/stb_image_write.h",
               "dwt.h",
               "dwt97.c",
               "wavescribe.cpp"

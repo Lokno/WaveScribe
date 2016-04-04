@@ -6,6 +6,10 @@ For the wavelet-based data encoding scheme uses the method described in the foll
 
 [A New Robust Blind Watermarking Method Based on Neural Networks in Wavelet Transform Domain] [1]
 
+## How To Build ##
+
+The project uses the build configuration tool [Premake] [4].  
+
 ## Usage ##
 
 > WaveScribe strength input.png [output.png "message"]
@@ -52,3 +56,4 @@ It is required for encoding and decoding the image.
   [1]: http://www.idosi.org/wasj/wasj22(11)13/8.pdf
   [2]: https://code.google.com/p/axonlib/source/browse/trunk/extern/dwt97.c?spec=svn19&r=19 "dwt97.c"
   [3]: https://github.com/nothings/stb "stb"
+  [4]: https://github.com/premake/premake-4.x/wiki/Premake_Quick_Start "premake"
